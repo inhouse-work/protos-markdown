@@ -89,7 +89,7 @@ module Protos
       yield(**attributes)
     end
 
-    def code_block(code, language, **attributes)
+    def code_block(**attributes)
       yield(**attributes)
     end
 
