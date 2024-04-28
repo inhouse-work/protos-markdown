@@ -3,6 +3,10 @@
 require "protos/markdown"
 
 RSpec.describe Protos::Markdown do
+  def md(content)
+    Protos::Markdown.new(content).call
+  end
+
   it "supports multiple headings" do
     output = md <<~MD
       # 1
@@ -97,9 +101,5 @@ RSpec.describe Protos::Markdown do
     MD
 
     expect(output).to eq "<p>One Two</p><p>Three</p>"
-  end
-
-  def md(content)
-    Protos::Markdown.new(content).call
   end
 end
