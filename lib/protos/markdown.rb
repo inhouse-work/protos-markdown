@@ -20,7 +20,7 @@ module Protos
       Markly.parse(@content)
     end
 
-    def visit(node)
+    def visit(node) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
       return if node.nil?
 
       case node.type

@@ -8,6 +8,6 @@ gemspec
 gem "debug"
 gem "phlex-testing-capybara"
 gem "protos", github: "inhouse-work/protos"
-gem "rspec"
 gem "rouge"
+gem "rspec"
 gem "rubocop-inhouse", require: false
