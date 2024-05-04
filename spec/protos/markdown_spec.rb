@@ -54,7 +54,7 @@ RSpec.describe Protos::Markdown do
       ```
     MD
 
-    expect(output).to eq %(<pre><code class="language-ruby">def foo\n\tbar\nend\n</code></pre>)
+    expect(output).to eq %(<pre><code class="highlight language-ruby"><span class="k">def</span> <span class="nf">foo</span>\n\t<span class="n">bar</span>\n<span class="k">end</span>\n</code></pre>)
   end
 
   it "supports paragraphs" do

@@ -2,6 +2,7 @@
 
 require "protos"
 require "markly"
+require "rouge"
 
 require_relative "markdown/version"
 
@@ -73,8 +74,8 @@ module Protos
       in :code_block
         code_block(node.string_content, node.fence_info) do |**attributes|
           pre(**attributes) do
-            code(class: "language-#{node.fence_info}") do
-              plain(node.string_content)
+            code(class: "highlight language-#{node.fence_info}") do
+              unsafe_raw lex(node.string_content, node.fence_info)
             end
           end
         end
@@ -82,7 +83,22 @@ module Protos
         hr
       in :blockquote
         blockquote { visit_children(node) }
+      in :html
+        unsafe_raw(node.string_content)
+      else
+        raise StandardError, "Unknown node type: #{node.type}"
       end
+    end
+
+    def formatter
+      @formatter ||= Rouge::Formatters::HTML.new
+    end
+
+    def lex(source, language)
+      lexer = Rouge::Lexer.find(language)
+      return source if lexer.nil?
+
+      formatter.format(lexer.lex(source))
     end
 
     def inline_code(**attributes)

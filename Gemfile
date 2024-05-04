@@ -9,4 +9,5 @@ gem "debug"
 gem "phlex-testing-capybara"
 gem "protos", github: "inhouse-work/protos"
 gem "rspec"
+gem "rouge"
 gem "rubocop-inhouse", require: false
