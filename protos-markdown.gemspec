@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "lib/protos/markdown/version"
-
 Gem::Specification.new do |spec|
   spec.name = "protos-markdown"
-  spec.version = Protos::Markdown::VERSION
+  spec.version = "0.1.0"
   spec.authors = ["Nolan Tait"]
   spec.email = ["nolanjtait@gmail.com"]
 

@@ -4,8 +4,6 @@ require "protos"
 require "markly"
 require "rouge"
 
-require_relative "markdown/version"
-
 module Protos
   class Markdown < Protos::Component
     param :content, reader: false
