@@ -3,6 +3,7 @@
 require "protos"
 require "markly"
 require "rouge"
+require "delegate"
 
 require_relative "markdown/ast"
 
