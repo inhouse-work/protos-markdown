@@ -7,7 +7,7 @@ require "rouge"
 require_relative "markdown/ast"
 
 module Protos
-  class Markdown < ::Protos::Component
+  class Markdown < ::Protos::Component # rubocop:disable Metrics/ClassLength
     param :content, reader: false
     option :sanitize, default: -> { true }, reader: false
 

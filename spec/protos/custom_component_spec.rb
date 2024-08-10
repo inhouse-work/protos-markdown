@@ -2,7 +2,7 @@
 
 require "protos/markdown"
 
-RSpec.describe Protos::Markdown do
+RSpec.describe "Custom components" do
   before do
     stub_const(
       "CustomMarkdown", Class.new(Protos::Markdown) do

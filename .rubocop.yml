@@ -7,3 +7,7 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 3.1
+
+Naming/FileName:
+  Exclude:
+    - lib/protos-markdown.rb
