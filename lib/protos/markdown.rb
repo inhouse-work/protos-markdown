@@ -4,88 +4,123 @@ require "protos"
 require "markly"
 require "rouge"
 
+require_relative "markdown/ast"
+
 module Protos
-  class Markdown < Protos::Component
+  class Markdown < ::Protos::Component
     param :content, reader: false
+    option :sanitize, default: -> { true }, reader: false
 
     def view_template
-      visit(doc)
+      return unless root
+
+      root.accept(self)
+    end
+
+    def visit_document(_node)
+      # Do nothing
+    end
+
+    def visit_softbreak(_node)
+      whitespace
+    end
+
+    def visit_text(node)
+      plain(node.string_content)
+    end
+
+    def visit_header(node)
+      case node.header_level
+      in 1 then h1 { visit_children(node) }
+      in 2 then h2 { visit_children(node) }
+      in 3 then h3 { visit_children(node) }
+      in 4 then h4 { visit_children(node) }
+      in 5 then h5 { visit_children(node) }
+      in 6 then h6 { visit_children(node) }
+      end
+    end
+
+    def visit_paragraph(node)
+      grandparent = node.parent&.parent
+
+      if grandparent&.type == :list && grandparent&.list_tight
+        visit_children(node)
+      else
+        p { visit_children(node) }
+      end
+    end
+
+    def visit_link(node)
+      a(href: node.url, title: node.title) { visit_children(node) }
+    end
+
+    def visit_image(node)
+      img(
+        src: node.url,
+        alt: node.each.first.string_content,
+        title: node.title
+      )
+    end
+
+    def visit_emph(node)
+      em { visit_children(node) }
+    end
+
+    def visit_strong(node)
+      strong { visit_children(node) }
+    end
+
+    def visit_list(node)
+      case node.list_type
+      when :ordered_list then ol { visit_children(node) }
+      when :bullet_list then ul { visit_children(node) }
+      end
+    end
+
+    def visit_list_item(node)
+      li { visit_children(node) }
+    end
+
+    def visit_code(node)
+      inline_code do |**attributes|
+        code(**attributes) { plain(node.string_content) }
+      end
+    end
+
+    def visit_code_block(node)
+      code_block(node.string_content, node.fence_info) do |**attributes|
+        pre(**attributes) do
+          code(class: "highlight language-#{node.fence_info}") do
+            unsafe_raw lex(node.string_content, node.fence_info)
+          end
+        end
+      end
+    end
+
+    def visit_hrule(_node)
+      hr
+    end
+
+    def visit_blockquote(node)
+      blockquote { visit_children(node) }
+    end
+
+    def visit_html(node)
+      return if @sanitize
+
+      unsafe_raw(node.string_content)
+    end
+
+    def visit_inline_html(node)
+      return if @sanitize
+
+      unsafe_raw(node.string_content)
     end
 
     private
 
-    def doc
-      Markly.parse(@content)
-    end
-
-    def visit(node) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
-      return if node.nil?
-
-      case node.type
-      in :document
-        visit_children(node)
-      in :softbreak
-        whitespace
-        visit_children(node)
-      in :text
-        plain(node.string_content)
-      in :header
-        case node.header_level
-        in 1 then h1 { visit_children(node) }
-        in 2 then h2 { visit_children(node) }
-        in 3 then h3 { visit_children(node) }
-        in 4 then h4 { visit_children(node) }
-        in 5 then h5 { visit_children(node) }
-        in 6 then h6 { visit_children(node) }
-        end
-      in :paragraph
-        grandparent = node.parent&.parent
-
-        if grandparent&.type == :list && grandparent&.list_tight
-          visit_children(node)
-        else
-          p { visit_children(node) }
-        end
-      in :link
-        a(href: node.url, title: node.title) { visit_children(node) }
-      in :image
-        img(
-          src: node.url,
-          alt: node.each.first.string_content,
-          title: node.title
-        )
-      in :emph
-        em { visit_children(node) }
-      in :strong
-        strong { visit_children(node) }
-      in :list
-        case node.list_type
-        in :ordered_list then ol { visit_children(node) }
-        in :bullet_list then ul { visit_children(node) }
-        end
-      in :list_item
-        li { visit_children(node) }
-      in :code
-        inline_code do |**attributes|
-          code(**attributes) { plain(node.string_content) }
-        end
-      in :code_block
-        code_block(node.string_content, node.fence_info) do |**attributes|
-          pre(**attributes) do
-            code(class: "highlight language-#{node.fence_info}") do
-              unsafe_raw lex(node.string_content, node.fence_info)
-            end
-          end
-        end
-      in :hrule
-        hr
-      in :blockquote
-        blockquote { visit_children(node) }
-      in :html
-        unsafe_raw(node.string_content)
-      else
-        raise StandardError, "Unknown node type: #{node.type}"
-      end
+    def root
+      AST.parse(@content)
     end
 
     def formatter
@@ -108,7 +143,7 @@ module Protos
     end
 
     def visit_children(node)
-      node.each { |c| visit(c) }
+      node.each { |child| child.accept(self) }
     end
   end
 end

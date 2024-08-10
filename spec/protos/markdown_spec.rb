@@ -4,7 +4,13 @@ require "protos/markdown"
 
 RSpec.describe Protos::Markdown do
   def md(content)
-    Protos::Markdown.new(content).call
+    Protos::Markdown.new(content, sanitize: false).call
+  end
+
+  it "supports inline html" do
+    output = md "I am about to say <div>Hello</div>"
+
+    expect(output).to eq "<p>I am about to say <div>Hello</div></p>"
   end
 
   it "supports multiple headings" do
