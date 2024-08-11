@@ -2,19 +2,39 @@
 
 require "protos/markdown"
 
-RSpec.describe Protos::Markdown do
-  def md(content)
-    Protos::Markdown.new(content, sanitize: false).call
+RSpec.describe Protos::Markdown, type: :view do
+  def render_markdown(content)
+    render Protos::Markdown.new(content, sanitize: false)
+  end
+
+  it "supports tables" do
+    render_markdown <<~MD
+      |**Entity ID**| `Health` |
+      |:-----------:|:------:|
+      | 1           | 100.0  |
+      | 3           | 40.0   |
+    MD
+
+    expect(page).to have_css "table"
+    expect(page).to have_css "th", text: "Entity ID"
+    expect(page).to have_css "th", text: "Health"
+    expect(page).to have_css "td", text: "1"
+    expect(page).to have_css "td", text: "100.0"
+    expect(page).to have_css "td", text: "3"
+    expect(page).to have_css "td", text: "40.0"
+    expect(page).to have_css "tr", count: 2
+    expect(page).to have_css "code", text: "Health"
+    expect(page).to have_css "strong", text: "Entity ID"
   end
 
   it "supports inline html" do
-    output = md "I am about to say <div>Hello</div>"
+    render_markdown "I am about to say <div>Hello</div>"
 
-    expect(output).to eq "<p>I am about to say <div>Hello</div></p>"
+    expect(page).to have_css "div", text: "Hello"
   end
 
   it "supports multiple headings" do
-    output = md <<~MD
+    render_markdown <<~MD
       # 1
       ## 2
       ### 3
@@ -23,36 +43,44 @@ RSpec.describe Protos::Markdown do
       ###### 6
     MD
 
-    expect(output).to eq "<h1>1</h1><h2>2</h2><h3>3</h3><h4>4</h4><h5>5</h5><h6>6</h6>"
+    expect(page).to have_css "h1", text: "1"
+    expect(page).to have_css "h2", text: "2"
+    expect(page).to have_css "h3", text: "3"
+    expect(page).to have_css "h4", text: "4"
+    expect(page).to have_css "h5", text: "5"
+    expect(page).to have_css "h6", text: "6"
   end
 
   it "supports ordered lists" do
-    output = md <<~MD
+    render_markdown <<~MD
       1. One
       2. Two
       3. Three
     MD
 
-    expect(output).to eq "<ol><li>One</li><li>Two</li><li>Three</li></ol>"
+    expect(page).to have_css "ol"
+    expect(page).to have_css "li", count: 3
   end
 
   it "supports unordered lists" do
-    output = md <<~MD
+    render_markdown <<~MD
       - One
       - Two
       - Three
     MD
 
-    expect(output).to eq "<ul><li>One</li><li>Two</li><li>Three</li></ul>"
+    expect(page).to have_css "ul"
+    expect(page).to have_css "li", count: 3
   end
 
   it "supports inline code" do
-    output = md "Some `code` here"
-    expect(output).to eq "<p>Some <code>code</code> here</p>"
+    render_markdown "Some `code` here"
+
+    expect(page).to have_css "code", text: "code"
   end
 
   it "supports block code" do
-    output = md <<~MD
+    render_markdown <<~MD
       ```ruby
       def foo
       	bar
@@ -60,52 +88,65 @@ RSpec.describe Protos::Markdown do
       ```
     MD
 
-    expect(output).to eq %(<pre><code class="highlight language-ruby"><span class="k">def</span> <span class="nf">foo</span>\n\t<span class="n">bar</span>\n<span class="k">end</span>\n</code></pre>)
+    expect(page).to have_css "pre code[class='highlight language-ruby']"
+    expect(page).to have_css "span.k", text: "def"
   end
 
   it "supports paragraphs" do
-    output = md "A\n\nB"
-    expect(output).to eq "<p>A</p><p>B</p>"
+    render_markdown "A\n\nB"
+
+    expect(page).to have_css "p", count: 2
   end
 
   it "supports links" do
-    output = md "[Hello](world 'title')"
-    expect(output).to eq %(<p><a href="world" title="title">Hello</a></p>)
+    render_markdown "[Hello](world 'title')"
+
+    expect(page).to have_css "a", text: "Hello"
+    expect(page).to have_css "a[title='title']"
+    expect(page).to have_css "a[href='world']"
   end
 
   it "supports emphasis" do
-    output = md "*Hello*"
-    expect(output).to eq "<p><em>Hello</em></p>"
+    render_markdown "*Hello*"
+
+    expect(page).to have_css "em", text: "Hello"
   end
 
   it "supports strong" do
-    output = md "**Hello**"
-    expect(output).to eq "<p><strong>Hello</strong></p>"
+    render_markdown "**Hello**"
+
+    expect(page).to have_css "p strong", text: "Hello"
   end
 
   it "supports blockquotes" do
-    output = md "> Hello"
-    expect(output).to eq "<blockquote><p>Hello</p></blockquote>"
+    render_markdown "> Hello"
+
+    expect(page).to have_css "blockquote p", text: "Hello"
   end
 
   it "supports horizontal rules" do
-    output = md "---"
-    expect(output).to eq "<hr>"
+    render_markdown "---"
+
+    expect(page).to have_css "hr"
   end
 
   it "supports images" do
-    output = md "![alt](src 'title')"
-    expect(output).to eq %(<p><img src="src" alt="alt" title="title"></p>)
+    render_markdown "![alt](src 'title')"
+
+    expect(page).to have_css "img[alt='alt']"
+    expect(page).to have_css "img[title='title']"
   end
 
   it "supports softbreaks in content as spaces" do
-    output = md <<~MD
+    render_markdown <<~MD
       One
       Two
 
       Three
     MD
 
-    expect(output).to eq "<p>One Two</p><p>Three</p>"
+    expect(page).to have_css "p", count: 2
+    expect(page).to have_css "p", text: "One Two"
+    expect(page).to have_css "p", text: "Three"
   end
 end

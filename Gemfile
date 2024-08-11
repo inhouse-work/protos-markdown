@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
+gem "capybara"
 gem "debug"
 gem "phlex-testing-capybara"
 gem "protos", github: "inhouse-work/protos"

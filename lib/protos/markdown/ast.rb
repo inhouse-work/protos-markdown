@@ -19,7 +19,7 @@ module Protos
 
       def self.parse(content)
         Markly
-          .parse(content)
+          .parse(content, flags: Markly::GITHUB_PRE_LANG, extensions: [:table])
           .then { |node| new(Node.new(node)) }
       end
 

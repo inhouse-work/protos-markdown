@@ -6,6 +6,7 @@ require "rouge"
 require "delegate"
 
 require_relative "markdown/ast"
+require_relative "markdown/table"
 
 module Protos
   class Markdown < ::Protos::Component # rubocop:disable Metrics/ClassLength
@@ -20,6 +21,12 @@ module Protos
 
     def visit_document(_node)
       # Do nothing
+    end
+
+    def visit_table(node)
+      render Markdown::Table.new do |table|
+        node.accept(table)
+      end
     end
 
     def visit_softbreak(_node)
