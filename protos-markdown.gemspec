@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "markly", "~> 0.7"
   spec.add_dependency "protos", ">= 0.4"
+  spec.add_dependency "rouge", "~> 4.3"
 
   spec.metadata["rubygems_mfa_required"] = "true"
 end
