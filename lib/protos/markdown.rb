@@ -146,7 +146,7 @@ module Protos
       yield(**attributes)
     end
 
-    def code_block(code, language, **attributes) # rubocop:disable Lint/UnusedMethodArgument, Metrics/ParameterLists
+    def code_block(code, language, **attributes) # rubocop:disable Lint/UnusedMethodArgument
       yield(**attributes)
     end
 
