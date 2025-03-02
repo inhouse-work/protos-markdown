@@ -99,7 +99,7 @@ module Protos
       code_block(node.string_content, node.fence_info) do |**attributes|
         pre(**attributes) do
           code(class: "highlight language-#{node.fence_info}") do
-            unsafe_raw lex(node.string_content, node.fence_info)
+            raw safe(lex(node.string_content, node.fence_info))
           end
         end
       end
@@ -116,13 +116,13 @@ module Protos
     def visit_html(node)
       return if @sanitize
 
-      unsafe_raw(node.string_content)
+      raw safe(node.string_content)
     end
 
     def visit_inline_html(node)
       return if @sanitize
 
-      unsafe_raw(node.string_content)
+      raw safe(node.string_content)
     end
 
     private

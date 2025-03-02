@@ -31,8 +31,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "markly", "~> 0.7"
-  spec.add_dependency "protos", ">= 0.4"
-  spec.add_dependency "rouge", "~> 4.3"
+  spec.add_dependency "protos", "~> 1"
+  spec.add_dependency "rouge", "~> 4"
 
   spec.metadata["rubygems_mfa_required"] = "true"
 end
