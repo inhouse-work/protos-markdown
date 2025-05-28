@@ -7,6 +7,12 @@ RSpec.describe Protos::Markdown, type: :view do
     render Protos::Markdown.new(content, sanitize: false)
   end
 
+  it "handles escaped characters" do
+    render_markdown "Hello \\*World\\*"
+
+    expect(page).to have_css "p", text: "Hello *World*"
+  end
+
   it "handles html blocks" do
     render_markdown <<~MD
       <!-- This is a comment -->

@@ -131,6 +131,10 @@ module Protos
       nil
     end
 
+    def visit_escaped(node)
+      plain(node.first_child&.string_content)
+    end
+
     private
 
     def root
