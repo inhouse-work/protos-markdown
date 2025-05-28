@@ -9,10 +9,10 @@ RSpec.describe Protos::Markdown, type: :view do
 
   it "supports tables" do
     render_markdown <<~MD
-      |**Entity ID**| `Health` |
-      |:-----------:|:------:|
-      | 1           | 100.0  |
-      | 3           | 40.0   |
+      |**Entity ID**|`Health`|
+      |-------------|--------|
+      | 1           |100.0   |
+      | 3           |40.0    |
     MD
 
     expect(page).to have_css "table"
@@ -22,7 +22,7 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "td", text: "100.0"
     expect(page).to have_css "td", text: "3"
     expect(page).to have_css "td", text: "40.0"
-    expect(page).to have_css "tr", count: 2
+    expect(page).to have_css "tr", count: 3
     expect(page).to have_css "code", text: "Health"
     expect(page).to have_css "strong", text: "Entity ID"
   end

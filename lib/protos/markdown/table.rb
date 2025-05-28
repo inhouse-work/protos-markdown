@@ -3,7 +3,7 @@
 module Protos
   class Markdown
     class Table < Protos::Table
-      option :inside_header, default: -> { false }, reader: false
+      option :inside_header, default: -> { true }, reader: false
 
       def visit_table(node)
         visit_children(node)
@@ -30,11 +30,11 @@ module Protos
       end
 
       def visit_table_row(node)
-        @inside_header = false
-
         row do
           visit_children(node)
         end
+
+        @inside_header = false
       end
 
       def visit_code(node)

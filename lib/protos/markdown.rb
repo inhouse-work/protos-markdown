@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "protos"
-require "markly"
+require "commonmarker"
 require "rouge"
 require "delegate"
 
@@ -37,7 +37,7 @@ module Protos
       plain(node.string_content)
     end
 
-    def visit_header(node)
+    def visit_heading(node)
       case node.header_level
       in 1 then h1 { visit_children(node) }
       in 2 then h2 { visit_children(node) }
@@ -80,12 +80,13 @@ module Protos
 
     def visit_list(node)
       case node.list_type
-      when :ordered_list then ol { visit_children(node) }
-      when :bullet_list then ul { visit_children(node) }
+      when :ordered then ol { visit_children(node) }
+      when :bullet then ul { visit_children(node) }
+      else raise ArgumentError, "Unknown list type: #{node.list_type}"
       end
     end
 
-    def visit_list_item(node)
+    def visit_item(node)
       li { visit_children(node) }
     end
 
@@ -105,11 +106,11 @@ module Protos
       end
     end
 
-    def visit_hrule(_node)
+    def visit_thematic_break(_node)
       hr
     end
 
-    def visit_blockquote(node)
+    def visit_block_quote(node)
       blockquote { visit_children(node) }
     end
 
@@ -119,10 +120,10 @@ module Protos
       raw safe(node.string_content)
     end
 
-    def visit_inline_html(node)
+    def visit_html_inline(node)
       return if @sanitize
 
-      raw safe(node.string_content)
+      raw safe(node.to_html(options: { render: { unsafe: true } }))
     end
 
     private
