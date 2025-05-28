@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "protos-markdown"
-  spec.version = "1.0.0"
+  spec.version = "1.1.0"
   spec.authors = ["Nolan Tait"]
   spec.email = ["nolanjtait@gmail.com"]
 
@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "markly", "~> 0.9"
+  spec.add_dependency "commonmarker", "~> 2.3"
   spec.add_dependency "protos", "~> 1"
   spec.add_dependency "rouge", "~> 4"
 

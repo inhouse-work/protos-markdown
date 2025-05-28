@@ -7,12 +7,26 @@ RSpec.describe Protos::Markdown, type: :view do
     render Protos::Markdown.new(content, sanitize: false)
   end
 
+  it "handles escaped characters" do
+    render_markdown "Hello \\*World\\*"
+
+    expect(page).to have_css "p", text: "Hello *World*"
+  end
+
+  it "handles html blocks" do
+    render_markdown <<~MD
+      <!-- This is a comment -->
+    MD
+
+    expect(page).not_to have_content "<!-- This is a comment -->"
+  end
+
   it "supports tables" do
     render_markdown <<~MD
-      |**Entity ID**| `Health` |
-      |:-----------:|:------:|
-      | 1           | 100.0  |
-      | 3           | 40.0   |
+      |**Entity ID**|`Health`|
+      |-------------|--------|
+      | 1           |100.0   |
+      | 3           |40.0    |
     MD
 
     expect(page).to have_css "table"
@@ -22,7 +36,7 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "td", text: "100.0"
     expect(page).to have_css "td", text: "3"
     expect(page).to have_css "td", text: "40.0"
-    expect(page).to have_css "tr", count: 2
+    expect(page).to have_css "tr", count: 3
     expect(page).to have_css "code", text: "Health"
     expect(page).to have_css "strong", text: "Entity ID"
   end
@@ -31,6 +45,15 @@ RSpec.describe Protos::Markdown, type: :view do
     render_markdown "I am about to say <div>Hello</div>"
 
     expect(page).to have_css "div", text: "Hello"
+  end
+
+  it "supports headings with links" do
+    render_markdown <<~MD
+      # [Introduction](/something)
+    MD
+
+    expect(page).to have_css "h1", id: "introduction"
+    expect(page).to have_css "h1 a", text: "Introduction"
   end
 
   it "supports multiple headings" do
@@ -43,12 +66,12 @@ RSpec.describe Protos::Markdown, type: :view do
       ###### 6
     MD
 
-    expect(page).to have_css "h1", text: "1"
-    expect(page).to have_css "h2", text: "2"
-    expect(page).to have_css "h3", text: "3"
-    expect(page).to have_css "h4", text: "4"
-    expect(page).to have_css "h5", text: "5"
-    expect(page).to have_css "h6", text: "6"
+    expect(page).to have_css "h1", text: "1", id: "1"
+    expect(page).to have_css "h2", text: "2", id: "2"
+    expect(page).to have_css "h3", text: "3", id: "3"
+    expect(page).to have_css "h4", text: "4", id: "4"
+    expect(page).to have_css "h5", text: "5", id: "5"
+    expect(page).to have_css "h6", text: "6", id: "6"
   end
 
   it "supports ordered lists" do

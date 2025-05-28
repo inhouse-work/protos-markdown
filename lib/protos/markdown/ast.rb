@@ -17,14 +17,15 @@ module Protos
         end
       end
 
-      def self.parse(content, **kwargs)
+      def self.parse(content, markdown_options: {})
         options = {
-          flags: Markly::GITHUB_PRE_LANG,
-          extensions: [:table]
-        }.merge(kwargs)
+          render: { gfm_quirks: true },
+          extension: { table: true },
+          **markdown_options
+        }
 
-        Markly
-          .parse(content, **options)
+        Commonmarker
+          .parse(content, options:)
           .then { |node| new(Node.new(node)) }
       end
 
