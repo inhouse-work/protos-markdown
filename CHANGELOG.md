@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [1.1.0] - 2024-05-28
+
+- Changes from `markly` to `commonmarker` which has better support
+- Adds IDs to headings by default
+- Adds ability to override common marker options with `markdown_options`
+
 ## [0.1.1] - 2024-08-14
 
 - Adds `rouge` to gem dependencies
