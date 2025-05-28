@@ -47,6 +47,15 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "div", text: "Hello"
   end
 
+  it "supports headings with links" do
+    render_markdown <<~MD
+      # [Introduction](/something)
+    MD
+
+    expect(page).to have_css "h1", id: "introduction"
+    expect(page).to have_css "h1 a", text: "Introduction"
+  end
+
   it "supports multiple headings" do
     render_markdown <<~MD
       # 1

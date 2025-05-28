@@ -20,13 +20,13 @@ module Protos
       end
 
       def text
-        begin
-          node.string_content
+        buffer = +""
+        node.walk do |node|
+          buffer << node.string_content
         rescue TypeError
-          node.first_child&.string_content || ""
+          # Ignore non-text nodes
         end
-      rescue TypeError
-        ""
+        buffer
       end
 
       def header_level
