@@ -7,6 +7,14 @@ RSpec.describe Protos::Markdown, type: :view do
     render Protos::Markdown.new(content, sanitize: false)
   end
 
+  it "handles html blocks" do
+    render_markdown <<~MD
+      <!-- This is a comment -->
+    MD
+
+    expect(page).not_to have_content "<!-- This is a comment -->"
+  end
+
   it "supports tables" do
     render_markdown <<~MD
       |**Entity ID**|`Health`|

@@ -127,6 +127,10 @@ module Protos
       raw safe(node.to_html(options: { render: { unsafe: true } }))
     end
 
+    def visit_html_block(_node)
+      nil
+    end
+
     private
 
     def root
