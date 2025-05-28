@@ -22,8 +22,8 @@ using the standard protos conventions:
 
 ```ruby
 class Markdown < Protos::Markdown
-  def h1 = super(class: css[:title])
-  def ul = super(class: "ml-4 pt-2")
+  def h1(**) = super(class: css[:title], **)
+  def ul(**) = super(class: "ml-4 pt-2", **)
 
   private
 
@@ -52,7 +52,7 @@ output = Markdown.new(content).call
 Which outputs the following html:
 
 ```html
-<h1 class="font-bold text-xl">Hello World</h1>
+<h1 class="font-bold text-xl" id="hello-world">Hello World</h1>
 <ul class="ml-4 pt-2">
   <li>A</li>
   <li>B</li>
