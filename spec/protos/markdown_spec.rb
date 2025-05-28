@@ -57,12 +57,12 @@ RSpec.describe Protos::Markdown, type: :view do
       ###### 6
     MD
 
-    expect(page).to have_css "h1", text: "1"
-    expect(page).to have_css "h2", text: "2"
-    expect(page).to have_css "h3", text: "3"
-    expect(page).to have_css "h4", text: "4"
-    expect(page).to have_css "h5", text: "5"
-    expect(page).to have_css "h6", text: "6"
+    expect(page).to have_css "h1", text: "1", id: "1"
+    expect(page).to have_css "h2", text: "2", id: "2"
+    expect(page).to have_css "h3", text: "3", id: "3"
+    expect(page).to have_css "h4", text: "4", id: "4"
+    expect(page).to have_css "h5", text: "5", id: "5"
+    expect(page).to have_css "h6", text: "6", id: "6"
   end
 
   it "supports ordered lists" do

@@ -14,6 +14,26 @@ module Protos
     option :sanitize, default: -> { true }, reader: false
     option :markdown_options, default: -> { {} }, reader: false
 
+    Heading = Data.define(:node) do
+      def id
+        text.downcase.gsub(/[^a-z0-9]+/, "-").chomp("-")
+      end
+
+      def text
+        begin
+          node.string_content
+        rescue TypeError
+          node.first_child&.string_content || ""
+        end
+      rescue TypeError
+        ""
+      end
+
+      def header_level
+        node.header_level
+      end
+    end
+
     def view_template
       return unless root
 
@@ -39,13 +59,15 @@ module Protos
     end
 
     def visit_heading(node)
-      case node.header_level
-      in 1 then h1 { visit_children(node) }
-      in 2 then h2 { visit_children(node) }
-      in 3 then h3 { visit_children(node) }
-      in 4 then h4 { visit_children(node) }
-      in 5 then h5 { visit_children(node) }
-      in 6 then h6 { visit_children(node) }
+      heading = Heading.new(node)
+
+      case heading.header_level
+      in 1 then h1(id: heading.id) { visit_children(node) }
+      in 2 then h2(id: heading.id) { visit_children(node) }
+      in 3 then h3(id: heading.id) { visit_children(node) }
+      in 4 then h4(id: heading.id) { visit_children(node) }
+      in 5 then h5(id: heading.id) { visit_children(node) }
+      in 6 then h6(id: heading.id) { visit_children(node) }
       end
     end
 
