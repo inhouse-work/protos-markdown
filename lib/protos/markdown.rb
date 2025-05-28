@@ -12,6 +12,7 @@ module Protos
   class Markdown < ::Protos::Component # rubocop:disable Metrics/ClassLength
     param :content, reader: false
     option :sanitize, default: -> { true }, reader: false
+    option :markdown_options, default: -> { {} }, reader: false
 
     def view_template
       return unless root
@@ -129,7 +130,7 @@ module Protos
     private
 
     def root
-      AST.parse(@content)
+      AST.parse(@content, markdown_options: @markdown_options)
     end
 
     def formatter

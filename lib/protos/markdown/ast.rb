@@ -17,11 +17,11 @@ module Protos
         end
       end
 
-      def self.parse(content, **kwargs)
+      def self.parse(content, markdown_options: {})
         options = {
           render: { gfm_quirks: true },
           extension: { table: true },
-          **kwargs
+          **markdown_options
         }
 
         Commonmarker
