@@ -173,4 +173,17 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "p", text: "One Two"
     expect(page).to have_css "p", text: "Three"
   end
+
+  it "supports emphasis inside a table" do
+    render_markdown <<~MD
+      | Header           |
+      | ------           |
+      | *Italic*         |
+      | ___emphasized___ |
+    MD
+
+    expect(page).to have_css "table"
+    expect(page).to have_css "td > em", text: "Italic"
+    expect(page).to have_css "td > em", text: "emphasized"
+  end
 end

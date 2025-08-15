@@ -45,6 +45,10 @@ module Protos
         strong { visit_children(node) }
       end
 
+      def visit_emph(node)
+        em { visit_children(node) }
+      end
+
       private
 
       def visit_children(node)
