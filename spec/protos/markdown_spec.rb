@@ -42,9 +42,10 @@ RSpec.describe Protos::Markdown, type: :view do
   end
 
   it "supports inline html" do
-    render_markdown "I am about to say <div>Hello</div>"
+    render_markdown "I am about to say <div>Hello</div> <kbd>World</kbd>"
 
     expect(page).to have_css "div", text: "Hello"
+    expect(page).to have_css "kbd", text: "World"
   end
 
   it "supports headings with links" do
