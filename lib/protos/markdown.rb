@@ -44,6 +44,10 @@ module Protos
       # Do nothing
     end
 
+    def visit_linebreak(_node)
+      br
+    end
+
     def visit_table(node)
       render Markdown::Table.new do |table|
         node.accept(table)

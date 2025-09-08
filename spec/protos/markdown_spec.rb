@@ -7,6 +7,12 @@ RSpec.describe Protos::Markdown, type: :view do
     render Protos::Markdown.new(content, sanitize: false)
   end
 
+  it "handles line breaks" do
+    render_markdown "Hello  \nWorld"
+
+    expect(page).to have_css "br"
+  end
+
   it "handles escaped characters" do
     render_markdown "Hello \\*World\\*"
 
