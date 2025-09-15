@@ -31,7 +31,7 @@ RSpec.describe Protos::Markdown, type: :view do
     render_markdown <<~MD
       |**Entity ID**|`Health`|
       |-------------|--------|
-      | 1           |100.0   |
+      | [1](https://google.com) |100.0   |
       | 3           |<div>40.0</div>    |
     MD
 
@@ -43,6 +43,7 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "td", text: "3"
     expect(page).to have_css "td", text: "40.0"
     expect(page).to have_css "tr", count: 3
+    expect(page).to have_link("1")
     expect(page).to have_css "code", text: "Health"
     expect(page).to have_css "strong", text: "Entity ID"
   end

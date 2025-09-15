@@ -56,6 +56,10 @@ module Protos
         raw safe(node.to_html(options: { render: { unsafe: true } }))
       end
 
+      def visit_link(node)
+        a(href: node.url, title: node.title) { visit_children(node) }
+      end
+
       private
 
       def visit_children(node)
