@@ -4,6 +4,7 @@ module Protos
   class Markdown
     class Table < Protos::Table
       option :inside_header, default: -> { true }, reader: false
+      option :sanitize, default: -> { true }
 
       def visit_table(node)
         visit_children(node)
@@ -47,6 +48,12 @@ module Protos
 
       def visit_emph(node)
         em { visit_children(node) }
+      end
+
+      def visit_html_inline(node)
+        return if @sanitize
+
+        raw safe(node.to_html(options: { render: { unsafe: true } }))
       end
 
       private

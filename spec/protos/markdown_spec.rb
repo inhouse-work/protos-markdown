@@ -32,7 +32,7 @@ RSpec.describe Protos::Markdown, type: :view do
       |**Entity ID**|`Health`|
       |-------------|--------|
       | 1           |100.0   |
-      | 3           |40.0    |
+      | 3           |<div>40.0</div>    |
     MD
 
     expect(page).to have_css "table"

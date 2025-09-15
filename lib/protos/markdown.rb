@@ -10,9 +10,9 @@ require_relative "markdown/table"
 
 module Protos
   class Markdown < ::Protos::Component # rubocop:disable Metrics/ClassLength
-    param :content, reader: false
-    option :sanitize, default: -> { true }, reader: false
-    option :markdown_options, default: -> { {} }, reader: false
+    param :content
+    option :sanitize, default: -> { true }
+    option :markdown_options, default: -> { {} }
 
     Heading = Data.define(:node) do
       def id
@@ -49,7 +49,7 @@ module Protos
     end
 
     def visit_table(node)
-      render Markdown::Table.new do |table|
+      render Markdown::Table.new(sanitize:) do |table|
         node.accept(table)
       end
     end
