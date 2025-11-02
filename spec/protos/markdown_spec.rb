@@ -193,4 +193,15 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "td > em", text: "Italic"
     expect(page).to have_css "td > em", text: "emphasized"
   end
+
+  it "supports images inside a table" do
+    render_markdown <<~MD
+      |Image|
+      |-----|
+      |![Some image](/images/something.png)|
+    MD
+
+    expect(page).to have_css "table"
+    expect(page).to have_css "td > img[alt='Some image'][src='/images/something.png']"
+  end
 end

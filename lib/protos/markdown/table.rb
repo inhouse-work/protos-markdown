@@ -10,6 +10,10 @@ module Protos
         visit_children(node)
       end
 
+      def visit_image(node)
+        img(src: node.url, alt: node.first&.string_content)
+      end
+
       def visit_table_header(node)
         @inside_header = true
 
