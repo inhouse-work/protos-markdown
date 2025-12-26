@@ -55,6 +55,23 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "kbd", text: "World"
   end
 
+  it "supports multiline html" do
+    render_markdown <<~MD
+      <table>
+        <thead>
+          <tr><th>Header</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Data</td></tr>
+        </tbody>
+      </table>
+    MD
+
+    expect(page).to have_css "table"
+    expect(page).to have_css "th", text: "Header"
+    expect(page).to have_css "td", text: "Data"
+  end
+
   it "supports headings with links" do
     render_markdown <<~MD
       # [Introduction](/something)

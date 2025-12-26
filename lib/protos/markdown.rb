@@ -153,8 +153,10 @@ module Protos
       raw safe(node.to_html(options: { render: { unsafe: true } }))
     end
 
-    def visit_html_block(_node)
-      nil
+    def visit_html_block(node)
+      return if @sanitize
+
+      raw safe(node.to_html(options: { render: { unsafe: true } }))
     end
 
     def visit_escaped(node)
