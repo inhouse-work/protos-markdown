@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "protos-markdown"
-  spec.version = "1.1.0"
+  spec.version = "1.2.0"
   spec.authors = ["Nolan Tait"]
   spec.email = ["nolanjtait@gmail.com"]
 

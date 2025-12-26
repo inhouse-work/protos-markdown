@@ -41,7 +41,7 @@ RSpec.describe Protos::Markdown, type: :view do
     expect(page).to have_css "td", text: "1"
     expect(page).to have_css "td", text: "100.0"
     expect(page).to have_css "td", text: "3"
-    expect(page).to have_css "td", text: "40.0"
+    expect(page).to have_css "div", text: "40.0"
     expect(page).to have_css "tr", count: 3
     expect(page).to have_link("1")
     expect(page).to have_css "code", text: "Health"

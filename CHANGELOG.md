@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## 1.2.0 - 2025-12-25
+
+- Adds handling inline html elements
+- Adds handling more nodes for markdown tables
+- Adds handling inline html blocks
+
 ## [1.1.0] - 2024-05-28
 
 - Changes from `markly` to `commonmarker` which has better support
